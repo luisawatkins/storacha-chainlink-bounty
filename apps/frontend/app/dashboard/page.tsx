@@ -263,7 +263,7 @@ function MyBountiesList({ address }: { address: `0x${string}` }) {
           <div key={index} className={styles.card}>
             <div className={styles.cardHeader}>
               <h3 className={styles.bountyTitle}>
-                #{bounty.id.toString()} {bounty.title}
+                #{bounty.id.toString()} Bounty
               </h3>
               <span
                 className={`${styles.statusBadge} ${
@@ -276,7 +276,9 @@ function MyBountiesList({ address }: { address: `0x${string}` }) {
               </span>
             </div>
             <div className={styles.cardBody}>
-              <p className={styles.description}>{bounty.description}</p>
+              <p className={styles.description}>
+                Metadata: {bounty.metadataUri}
+              </p>
               <div
                 style={{
                   marginTop: "1rem",

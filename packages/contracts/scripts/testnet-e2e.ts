@@ -91,9 +91,9 @@ async function main() {
   const deadline = Math.floor(Date.now() / 1000) + 86400; // 24h from now
   const maxSubmissions = 5;
 
+  const metadataUri = "ipfs://bafkreitest_bounty_metadata_placeholder"; // IPFS CID of off-chain metadata JSON
   const tx2 = await bountyRegistry.createBounty(
-    "Test Bounty",
-    "Testing Chainlink Functions verification",
+    metadataUri,
     schemaCid,
     deadline,
     maxSubmissions,

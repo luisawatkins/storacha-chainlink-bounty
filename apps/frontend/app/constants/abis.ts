@@ -3,12 +3,7 @@ export const BOUNTY_REGISTRY_ABI = [
     inputs: [
       {
         internalType: "string",
-        name: "title",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "description",
+        name: "metadataUri",
         type: "string",
       },
       {
@@ -75,12 +70,7 @@ export const BOUNTY_REGISTRY_ABI = [
           },
           {
             internalType: "string",
-            name: "title",
-            type: "string",
-          },
-          {
-            internalType: "string",
-            name: "description",
+            name: "metadataUri",
             type: "string",
           },
           {

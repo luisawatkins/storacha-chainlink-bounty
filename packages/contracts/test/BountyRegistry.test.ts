@@ -69,7 +69,7 @@ describe("BountyRegistry", function () {
       await expect(
         registry
           .connect(creator)
-          .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+          .createBounty("QmMetadata", "QmSchema", deadline, 10, {
             value: reward,
           })
       ).to.be.revertedWithCustomError(registry, "EscrowManagerNotSet");
@@ -141,12 +141,19 @@ describe("BountyRegistry", function () {
       await expect(
         registry
           .connect(creator)
-          .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+          .createBounty("QmMetadata", "QmSchema", deadline, 10, {
             value: reward,
           })
       )
         .to.emit(registry, "BountyCreated")
-        .withArgs(0, creator.address, reward, "QmSchema", deadline)
+        .withArgs(
+          0,
+          creator.address,
+          reward,
+          "QmMetadata",
+          "QmSchema",
+          deadline,
+        )
         .and.to.emit(escrowManager, "FundsDeposited")
         .withArgs(0, creator.address, reward);
 
@@ -166,7 +173,7 @@ describe("BountyRegistry", function () {
       await expect(
         registry
           .connect(creator)
-          .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+          .createBounty("QmMetadata", "QmSchema", deadline, 10, {
             value: hre.ethers.parseEther("0.005"),
           })
       ).to.be.revertedWithCustomError(registry, "InsufficientReward");
@@ -179,7 +186,7 @@ describe("BountyRegistry", function () {
       await expect(
         registry
           .connect(creator)
-          .createBounty("Title", "Desc", "QmSchema", pastDeadline, 10, {
+          .createBounty("QmMetadata", "QmSchema", pastDeadline, 10, {
             value: hre.ethers.parseEther("0.1"),
           })
       ).to.be.revertedWithCustomError(registry, "InvalidDeadline");
@@ -192,7 +199,7 @@ describe("BountyRegistry", function () {
       await expect(
         registry
           .connect(creator)
-          .createBounty("Title", "Desc", "QmSchema", deadline, 0, {
+          .createBounty("QmMetadata", "QmSchema", deadline, 0, {
             value: hre.ethers.parseEther("0.1"),
           })
       ).to.be.revertedWithCustomError(registry, "InvalidStatus");
@@ -209,7 +216,7 @@ describe("BountyRegistry", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: reward,
         });
 
@@ -248,7 +255,7 @@ describe("BountyRegistry", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: reward,
         });
       await registry.connect(creator).cancelBounty(0);
@@ -264,7 +271,7 @@ describe("BountyRegistry", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -283,7 +290,7 @@ describe("BountyRegistry", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -305,7 +312,7 @@ describe("BountyRegistry", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -333,7 +340,7 @@ describe("BountyRegistry", function () {
 
       await newRegistry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -352,7 +359,7 @@ describe("BountyRegistry", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 3, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 3, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -370,7 +377,7 @@ describe("BountyRegistry", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 3, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 3, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -387,7 +394,7 @@ describe("BountyRegistry", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 2, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 2, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -407,7 +414,7 @@ describe("BountyRegistry", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -423,12 +430,12 @@ describe("BountyRegistry", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title 1", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata1", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
       await registry
         .connect(creator)
-        .createBounty("Title 2", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata2", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
 

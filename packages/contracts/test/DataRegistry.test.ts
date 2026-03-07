@@ -39,7 +39,7 @@ describe("DataRegistry", function () {
     const deadline = (await time.latest()) + 86400;
     await bountyRegistry
       .connect(creator)
-      .createBounty("Test Bounty", "Description", "QmSchema", deadline, 10, {
+      .createBounty("QmMetadata", "QmSchema", deadline, 10, {
         value: hre.ethers.parseEther("0.1"),
       });
 
