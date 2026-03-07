@@ -2,7 +2,15 @@
 
 import { ReactNode, useState, useEffect } from "react";
 import { WagmiProvider } from "wagmi";
-import { mainnet, sepolia, polygon, arbitrum, base, optimism } from "wagmi/chains";
+import {
+  mainnet,
+  sepolia,
+  polygon,
+  arbitrum,
+  base,
+  optimism,
+  localhost,
+} from "wagmi/chains";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   RainbowKitProvider,
@@ -16,7 +24,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 const config = getDefaultConfig({
   appName: "Storacha × Chainlink Bounty",
   projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || "demo",
-  chains: [mainnet, sepolia, polygon, arbitrum, base, optimism],
+  chains: [mainnet, sepolia, polygon, arbitrum, base, optimism, localhost],
   ssr: true,
 });
 

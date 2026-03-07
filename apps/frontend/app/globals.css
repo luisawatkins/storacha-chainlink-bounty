@@ -1,18 +1,18 @@
 /* ===== Theme Variables ===== */
 :root {
-  /* Base Colors */
-  --background: #fafafa;
-  --background-secondary: #f4f4f5;
-  --foreground: #18181b;
-  --foreground-secondary: #3f3f46;
-  --foreground-muted: #71717a;
+  /* Base Colors - Light Mode */
+  --background: #f8fafc; /* Very light blue/white */
+  --background-secondary: #f1f5f9;
+  --foreground: #0f172a; /* Slate 900 */
+  --foreground-secondary: #334155; /* Slate 700 */
+  --foreground-muted: #64748b; /* Slate 500 */
 
   /* Brand Colors */
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --primary-light: #e0e7ff;
-  --accent: #06b6d4;
-  --accent-hover: #0891b2;
+  --primary: #06b6d4; /* Cyan 500 */
+  --primary-hover: #0891b2; /* Cyan 600 */
+  --primary-light: #cffafe; /* Cyan 100 */
+  --accent: #3b82f6; /* Blue 500 */
+  --accent-hover: #2563eb; /* Blue 600 */
 
   /* Status Colors */
   --success: #10b981;
@@ -20,85 +20,81 @@
   --error: #ef4444;
 
   /* UI Colors */
-  --border: #e4e4e7;
-  --border-hover: #a1a1aa;
+  --border: #e2e8f0; /* Slate 200 */
+  --border-hover: #cbd5e1; /* Slate 300 */
   --card-bg: #ffffff;
-  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --card-shadow-hover: 0 10px 40px rgba(0, 0, 0, 0.12);
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --card-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 
   /* Button Colors */
-  --button-primary-bg: #18181b;
-  --button-primary-text: #fafafa;
-  --button-primary-hover: #3f3f46;
-  --button-secondary-bg: transparent;
-  --button-secondary-text: #18181b;
-  --button-secondary-hover: #f4f4f5;
+  --button-primary-bg: #06b6d4;
+  --button-primary-text: #ffffff;
+  --button-primary-hover: #0891b2;
+  --button-secondary-bg: #f1f5f9;
+  --button-secondary-text: #0f172a;
+  --button-secondary-hover: #e2e8f0;
 
   /* Theme Toggle */
-  --toggle-bg: #f4f4f5;
-  --toggle-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --toggle-shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.15);
-  --toggle-ripple: rgba(99, 102, 241, 0.3);
+  --toggle-bg: #ffffff;
+  --toggle-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --toggle-shadow-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --toggle-ripple: rgba(6, 182, 212, 0.2);
   --sun-color: #f59e0b;
-  --moon-color: #6366f1;
+  --moon-color: #64748b;
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%);
-  --gradient-bg: linear-gradient(180deg, #fafafa 0%, #f4f4f5 100%);
-
+  --gradient-primary: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+  --gradient-bg: #f8fafc;
+  
   /* Glass Effect */
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.2);
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.5);
 }
 
 /* ===== Dark Theme ===== */
 :root.dark {
-  /* Base Colors */
-  --background: #09090b;
-  --background-secondary: #18181b;
-  --foreground: #fafafa;
-  --foreground-secondary: #d4d4d8;
-  --foreground-muted: #a1a1aa;
+  /* Base Colors - Dark Mode */
+  --background: #0B1121; /* Deep Navy */
+  --background-secondary: #151e32;
+  --foreground: #ffffff;
+  --foreground-secondary: #e2e8f0;
+  --foreground-muted: #94a3b8; /* Slate 400 */
 
   /* Brand Colors */
-  --primary: #818cf8;
-  --primary-hover: #a5b4fc;
-  --primary-light: #1e1b4b;
-  --accent: #22d3ee;
-  --accent-hover: #67e8f9;
-
+  --primary: #06b6d4; /* Cyan 500 */
+  --primary-hover: #22d3ee; /* Cyan 400 */
+  --primary-light: #164e63; /* Cyan 900 */
+  
   /* UI Colors */
-  --border: #27272a;
-  --border-hover: #3f3f46;
-  --card-bg: #18181b;
-  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
-  --card-shadow-hover: 0 10px 40px rgba(0, 0, 0, 0.5);
+  --border: #1e293b; /* Slate 800 */
+  --border-hover: #334155; /* Slate 700 */
+  --card-bg: #151e32; /* Slightly lighter navy for cards */
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --card-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
 
   /* Button Colors */
-  --button-primary-bg: #fafafa;
-  --button-primary-text: #18181b;
-  --button-primary-hover: #d4d4d8;
-  --button-secondary-bg: transparent;
-  --button-secondary-text: #fafafa;
-  --button-secondary-hover: #27272a;
+  --button-primary-bg: #06b6d4;
+  --button-primary-text: #ffffff;
+  --button-primary-hover: #22d3ee;
+  --button-secondary-bg: rgba(255, 255, 255, 0.05);
+  --button-secondary-text: #ffffff;
+  --button-secondary-hover: rgba(255, 255, 255, 0.1);
 
   /* Theme Toggle */
-  --toggle-bg: #27272a;
-  --toggle-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --toggle-shadow-hover: 0 4px 16px rgba(129, 140, 248, 0.3);
-  --toggle-ripple: rgba(129, 140, 248, 0.4);
+  --toggle-bg: #1e293b;
+  --toggle-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
+  --toggle-shadow-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  --toggle-ripple: rgba(6, 182, 212, 0.3);
   --sun-color: #fbbf24;
-  --moon-color: #c4b5fd;
+  --moon-color: #06b6d4;
 
   /* Gradients */
-  --gradient-primary: linear-gradient(135deg, #818cf8 0%, #a78bfa 100%);
-  --gradient-accent: linear-gradient(135deg, #22d3ee 0%, #38bdf8 100%);
-  --gradient-bg: linear-gradient(180deg, #09090b 0%, #18181b 100%);
-
+  --gradient-primary: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+  --gradient-bg: #0B1121;
+  
   /* Glass Effect */
-  --glass-bg: rgba(24, 24, 27, 0.7);
-  --glass-border: rgba(39, 39, 42, 0.5);
+  --glass-bg: rgba(11, 17, 33, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 /* ===== Base Styles ===== */

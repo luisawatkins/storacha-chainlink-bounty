@@ -1,7 +1,7 @@
 {
-  "name": "@storacha-chainlink/sdk",
+  "name": "@storacha-chainlink/functions",
   "version": "0.1.0",
-  "description": "TypeScript SDK for Storacha integration with the data bounty marketplace",
+  "description": "Chainlink Functions verification source code for the data bounty marketplace",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -12,38 +12,38 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "src/source.js"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp src/source.js dist/source.js",
     "dev": "tsc --watch",
     "clean": "rm -rf dist",
     "lint": "eslint src --max-warnings 0",
     "check-types": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "simulate": "node --loader ts-node/esm scripts/simulate.ts"
   },
   "keywords": [
-    "storacha",
-    "w3up",
+    "chainlink",
+    "functions",
+    "verification",
     "ipfs",
-    "ucan",
-    "filecoin",
-    "bounty",
-    "chainlink"
+    "storacha",
+    "bounty"
   ],
   "license": "MIT",
   "dependencies": {
-    "@storacha/client": "^1.0.0"
+    "@chainlink/functions-toolkit": "^0.3.0"
   },
   "devDependencies": {
     "@storacha-chainlink/eslint-config": "workspace:*",
     "@storacha-chainlink/typescript-config": "workspace:*",
     "@types/node": "^22.15.3",
     "@vitest/coverage-v8": "^3.0.0",
-    "dotenv": "^16.0.3",
-    "ethers": "^6.14.0",
+    "ts-node": "^10.9.0",
     "typescript": "^5.9.2",
     "vitest": "^3.0.0"
   },

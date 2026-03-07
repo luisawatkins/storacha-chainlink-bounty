@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styles from "./page.module.css";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { ConnectWallet } from "./components/ConnectWallet";
@@ -5,12 +6,6 @@ import { ConnectWallet } from "./components/ConnectWallet";
 export default function Home() {
   return (
     <div className={styles.page}>
-      {/* Header with Theme Toggle and Wallet Connect */}
-      <header className={styles.header}>
-        <ThemeToggle />
-        <ConnectWallet />
-      </header>
-
       <main className={styles.main}>
         {/* Hero Section */}
         <section className={styles.hero}>
@@ -28,7 +23,7 @@ export default function Home() {
           </p>
 
           <div className={styles.ctas}>
-            <a href="#" className={styles.primary}>
+            <Link href="/explore" className={styles.primary}>
               <svg
                 width="20"
                 height="20"
@@ -44,10 +39,10 @@ export default function Home() {
                 <path d="M2 12l10 5 10-5" />
               </svg>
               Explore Bounties
-            </a>
-            <a href="#" className={styles.secondary}>
+            </Link>
+            <Link href="/create-bounty" className={styles.secondary}>
               Create Bounty
-            </a>
+            </Link>
           </div>
         </section>
 

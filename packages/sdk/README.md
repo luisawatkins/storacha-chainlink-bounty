@@ -56,7 +56,10 @@ const client = await StorachaBountyClient.create();
 
 // With custom configuration
 const client = await StorachaBountyClient.create({
-  serviceUrl: "https://custom-storacha-instance.com",
+  serviceUrl: "https://custom-storacha-instance.com/ipfs/",
+  clientOptions: {
+    principal: "did:key:z6MkYourAgentDid",
+  },
 });
 ```
 
@@ -204,30 +207,76 @@ Example of submitting data for a bounty:
 import { StorachaBountyClient } from "@storacha-chainlink/sdk";
 import { ethers } from "ethers";
 
-// Initialize Storacha client
 const storacha = await StorachaBountyClient.create();
 await storacha.authorize("contributor@example.com");
 await storacha.createSpace({ name: "my-submissions" });
 
-// Prepare and upload bounty data
 const bountyData = {
   bountyId: 1,
   timestamp: Date.now(),
-  data: {
-    // Your submission data here
-  },
+  data: {},
 };
 
 const upload = await storacha.uploadJSON(bountyData);
-console.log("Data CID:", upload.cidString);
 
-// Submit to smart contract
 const dataRegistry = new ethers.Contract(DATA_REGISTRY_ADDRESS, ABI, signer);
 await dataRegistry.submitData(
-  1, // bountyId
-  upload.cidString, // CID
-  JSON.stringify({ name: "My Submission" }), // metadata
+  1,
+  upload.cidString,
+  JSON.stringify({ name: "My Submission" }),
 );
+```
+
+## Examples
+
+### Node script example
+
+An end-to-end Node script that uploads JSON and submits the resulting CID to `DataRegistry` is available at:
+
+- `packages/sdk/examples/node/submit-bounty.mjs`
+
+Prerequisites:
+
+- Build the SDK:
+
+```bash
+pnpm build --filter @storacha-chainlink/sdk
+```
+
+- Set environment variables:
+
+```bash
+export RPC_URL="https://sepolia.example"
+export PRIVATE_KEY="0x..."
+export DATA_REGISTRY_ADDRESS="0x..."
+export STORACHA_EMAIL="contributor@example.com"
+export BOUNTY_ID="1"
+```
+
+Run the script:
+
+```bash
+node packages/sdk/examples/node/submit-bounty.mjs
+```
+
+### Browser example
+
+A minimal browser example that authorizes with email, creates a space, and uploads JSON is available at:
+
+- `packages/sdk/examples/browser/index.html`
+
+Prerequisites:
+
+- Build the SDK:
+
+```bash
+pnpm build --filter @storacha-chainlink/sdk
+```
+
+- Serve the examples directory with any static file server, then open the HTML file in a browser:
+
+```bash
+npx serve packages/sdk/examples/browser
 ```
 
 ## Security Considerations

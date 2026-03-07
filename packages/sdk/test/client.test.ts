@@ -158,9 +158,13 @@ describe("StorachaBountyClient", () => {
     });
 
     it("should accept optional configuration", async () => {
-      const config = { serviceUrl: "https://custom.storacha.network" };
+      const config = {
+        serviceUrl: "https://custom.storacha.network/ipfs/",
+        clientOptions: { principal: "test-principal" },
+      };
       const client = await StorachaBountyClient.create(config);
       expect(client).toBeInstanceOf(StorachaBountyClient);
+      expect(ClientModule.create).toHaveBeenCalledWith(config.clientOptions);
     });
   });
 
@@ -735,6 +739,17 @@ describe("StorachaBountyClient", () => {
       const url = client.getRetrievalUrl(cidObject);
 
       expect(url).toBe("https://w3s.link/ipfs/bafytest789");
+    });
+
+    it("should use custom serviceUrl when configured", async () => {
+      const client = await StorachaBountyClient.create({
+        serviceUrl: "https://custom.gateway/ipfs/",
+      });
+      const cid = "bafycustom";
+
+      const url = client.getRetrievalUrl(cid);
+
+      expect(url).toBe("https://custom.gateway/ipfs/bafycustom");
     });
   });
 

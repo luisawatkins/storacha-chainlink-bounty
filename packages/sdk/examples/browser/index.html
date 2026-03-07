@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Storacha SDK Browser Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <main>
+      <h1>Storacha SDK Browser Example</h1>
+      <form>
+        <label>
+          Email
+          <input id="email" type="email" required />
+        </label>
+        <label>
+          Bounty ID
+          <input id="bountyId" type="number" min="1" />
+        </label>
+        <button type="submit">Authorize and upload JSON</button>
+      </form>
+      <pre id="output"></pre>
+    </main>
+    <script type="module" src="./browser-example.js"></script>
+  </body>
+</html>
+

@@ -172,6 +172,27 @@ describe("IPFS Data Retrieval", () => {
       );
     });
 
+    it("should prefer configured serviceUrl gateway when provided", async () => {
+      client = await StorachaBountyClient.create({
+        serviceUrl: "https://custom.gateway/ipfs/",
+      });
+      client.clearCache();
+      const testData = { fromCustomGateway: true };
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        headers: new Headers({ "content-type": "application/json" }),
+        json: () => Promise.resolve(testData),
+      });
+
+      const result = await client.fetchByCID("bafytestcustom");
+
+      expect(result.gateway).toBe("https://custom.gateway/ipfs/");
+      expect(mockFetch).toHaveBeenCalledWith(
+        "https://custom.gateway/ipfs/bafytestcustom",
+        expect.any(Object),
+      );
+    });
+
     it("should throw IPFSFetchError when all gateways fail", async () => {
       mockFetch.mockRejectedValue(new Error("All failed"));
 

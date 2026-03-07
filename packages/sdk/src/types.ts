@@ -1,3 +1,5 @@
+import type { ClientFactoryOptions } from "@storacha/client";
+
 /**
  * Types for the Storacha Bounty SDK
  */
@@ -138,6 +140,7 @@ export interface DelegationResult {
 export interface StorachaBountyClientConfig {
   /** Custom service URL (optional, defaults to Storacha) */
   serviceUrl?: string;
+  clientOptions?: ClientFactoryOptions;
 }
 
 /**

@@ -46,9 +46,31 @@ import {
 export class StorachaBountyClient {
   private client: Client.Client;
   private cache: Map<string, CacheEntry> = new Map();
+  private gatewayBaseUrl: string;
+  private gateways: string[];
 
-  private constructor(client: Client.Client) {
+  private constructor(
+    client: Client.Client,
+    config?: StorachaBountyClientConfig,
+  ) {
     this.client = client;
+    const raw =
+      config?.serviceUrl && config.serviceUrl.length > 0
+        ? config.serviceUrl
+        : "https://w3s.link/ipfs/";
+    const withPath = raw.includes("/ipfs")
+      ? raw
+      : `${raw.replace(/\/+$/, "")}/ipfs/`;
+    const normalizedBase = withPath.endsWith("/") ? withPath : `${withPath}/`;
+    this.gatewayBaseUrl = normalizedBase;
+    this.gateways =
+      config?.serviceUrl && config.serviceUrl.length > 0
+        ? [normalizedBase, ...DEFAULT_GATEWAYS]
+        : [...DEFAULT_GATEWAYS];
+  }
+
+  private getGatewayList(gateways?: string[]): string[] {
+    return gateways ?? [...this.gateways];
   }
 
   /**
@@ -57,10 +79,10 @@ export class StorachaBountyClient {
    * @returns A new StorachaBountyClient instance
    */
   static async create(
-    _config?: StorachaBountyClientConfig,
+    config?: StorachaBountyClientConfig,
   ): Promise<StorachaBountyClient> {
-    const client = await Client.create();
-    return new StorachaBountyClient(client);
+    const client = await Client.create(config?.clientOptions);
+    return new StorachaBountyClient(client, config);
   }
 
   // ============ Authentication ============
@@ -427,7 +449,7 @@ export class StorachaBountyClient {
    */
   getRetrievalUrl(cid: string | { toString(): string }): string {
     const cidString = typeof cid === "string" ? cid : cid.toString();
-    return `https://w3s.link/ipfs/${cidString}`;
+    return `${this.gatewayBaseUrl}${cidString}`;
   }
 
   // ============ IPFS Data Retrieval ============
@@ -461,8 +483,9 @@ export class StorachaBountyClient {
       maxRetries = 2,
       useCache = true,
       cacheTTL = 300000,
-      gateways = [...DEFAULT_GATEWAYS],
+      gateways,
     } = options ?? {};
+    const gatewayList = this.getGatewayList(gateways);
 
     // Check cache first
     if (useCache) {
@@ -480,7 +503,7 @@ export class StorachaBountyClient {
 
     const gatewayErrors = new Map<string, Error>();
 
-    for (const gateway of gateways) {
+    for (const gateway of gatewayList) {
       const url = `${gateway}${cidString}`;
 
       for (let attempt = 0; attempt <= maxRetries; attempt++) {
@@ -562,8 +585,9 @@ export class StorachaBountyClient {
       maxRetries = 2,
       useCache = true,
       cacheTTL = 300000,
-      gateways = [...DEFAULT_GATEWAYS],
+      gateways,
     } = options ?? {};
+    const gatewayList = this.getGatewayList(gateways);
 
     // Check cache first
     if (useCache) {
@@ -581,7 +605,7 @@ export class StorachaBountyClient {
 
     const gatewayErrors = new Map<string, Error>();
 
-    for (const gateway of gateways) {
+    for (const gateway of gatewayList) {
       const url = `${gateway}${cidString}`;
 
       for (let attempt = 0; attempt <= maxRetries; attempt++) {
