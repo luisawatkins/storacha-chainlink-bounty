@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "compile": "hardhat compile",
+    "lint": "eslint . --max-warnings 0",
     "test": "hardhat test",
     "deploy:local": "hardhat ignition deploy ignition/modules/DeploySystem.ts",
     "deploy:sepolia": "hardhat ignition deploy ignition/modules/DeploySystem.ts --network sepolia",

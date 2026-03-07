@@ -43,8 +43,12 @@ describe("EscrowManager", function () {
 
   describe("Admin Functions", function () {
     it("Should set BountyRegistry address", async function () {
-      const { escrowManager, bountyRegistry } = await loadFixture(deployFixture);
-      expect(await escrowManager.bountyRegistry()).to.equal(bountyRegistry.address);
+      const { escrowManager, bountyRegistry } = await loadFixture(
+        deployFixture
+      );
+      expect(await escrowManager.bountyRegistry()).to.equal(
+        bountyRegistry.address
+      );
     });
 
     it("Should set DataRegistry address", async function () {
@@ -53,10 +57,16 @@ describe("EscrowManager", function () {
     });
 
     it("Should emit events when updating registry addresses", async function () {
-      const { escrowManager, owner, user } = await loadFixture(deployFixture);
+      const {
+        escrowManager: _escrowManager,
+        owner: _owner,
+        user,
+      } = await loadFixture(deployFixture);
 
       // Deploy fresh contract without set addresses
-      const EscrowManager = await hre.ethers.getContractFactory("EscrowManager");
+      const EscrowManager = await hre.ethers.getContractFactory(
+        "EscrowManager"
+      );
       const freshEscrow = await EscrowManager.deploy();
 
       await expect(freshEscrow.setBountyRegistry(user.address))
@@ -73,11 +83,17 @@ describe("EscrowManager", function () {
 
       await expect(
         escrowManager.connect(user).setBountyRegistry(user.address)
-      ).to.be.revertedWithCustomError(escrowManager, "OwnableUnauthorizedAccount");
+      ).to.be.revertedWithCustomError(
+        escrowManager,
+        "OwnableUnauthorizedAccount"
+      );
 
       await expect(
         escrowManager.connect(user).setDataRegistry(user.address)
-      ).to.be.revertedWithCustomError(escrowManager, "OwnableUnauthorizedAccount");
+      ).to.be.revertedWithCustomError(
+        escrowManager,
+        "OwnableUnauthorizedAccount"
+      );
     });
 
     it("Should revert when setting zero address", async function () {
@@ -95,7 +111,9 @@ describe("EscrowManager", function () {
 
   describe("Deposit", function () {
     it("Should accept deposit from BountyRegistry", async function () {
-      const { escrowManager, bountyRegistry, depositor } = await loadFixture(deployFixture);
+      const { escrowManager, bountyRegistry, depositor } = await loadFixture(
+        deployFixture
+      );
       const bountyId = 1;
       const amount = hre.ethers.parseEther("1.0");
 
@@ -115,7 +133,9 @@ describe("EscrowManager", function () {
     });
 
     it("Should update statistics after deposit", async function () {
-      const { escrowManager, bountyRegistry, depositor } = await loadFixture(deployFixture);
+      const { escrowManager, bountyRegistry, depositor } = await loadFixture(
+        deployFixture
+      );
       const amount = hre.ethers.parseEther("1.0");
 
       await escrowManager
@@ -128,24 +148,34 @@ describe("EscrowManager", function () {
     });
 
     it("Should revert deposit from unauthorized caller", async function () {
-      const { escrowManager, user, depositor } = await loadFixture(deployFixture);
+      const { escrowManager, user, depositor } = await loadFixture(
+        deployFixture
+      );
       const amount = hre.ethers.parseEther("1.0");
 
       await expect(
-        escrowManager.connect(user).deposit(1, depositor.address, { value: amount })
+        escrowManager
+          .connect(user)
+          .deposit(1, depositor.address, { value: amount })
       ).to.be.revertedWithCustomError(escrowManager, "Unauthorized");
     });
 
     it("Should revert deposit with zero amount", async function () {
-      const { escrowManager, bountyRegistry, depositor } = await loadFixture(deployFixture);
+      const { escrowManager, bountyRegistry, depositor } = await loadFixture(
+        deployFixture
+      );
 
       await expect(
-        escrowManager.connect(bountyRegistry).deposit(1, depositor.address, { value: 0 })
+        escrowManager
+          .connect(bountyRegistry)
+          .deposit(1, depositor.address, { value: 0 })
       ).to.be.revertedWithCustomError(escrowManager, "InvalidAmount");
     });
 
     it("Should revert deposit with zero depositor address", async function () {
-      const { escrowManager, bountyRegistry } = await loadFixture(deployFixture);
+      const { escrowManager, bountyRegistry } = await loadFixture(
+        deployFixture
+      );
       const amount = hre.ethers.parseEther("1.0");
 
       await expect(
@@ -156,7 +186,9 @@ describe("EscrowManager", function () {
     });
 
     it("Should revert if escrow already exists for bounty", async function () {
-      const { escrowManager, bountyRegistry, depositor } = await loadFixture(deployFixture);
+      const { escrowManager, bountyRegistry, depositor } = await loadFixture(
+        deployFixture
+      );
       const amount = hre.ethers.parseEther("1.0");
 
       await escrowManager
@@ -173,8 +205,13 @@ describe("EscrowManager", function () {
 
   describe("Release", function () {
     it("Should release funds to recipient", async function () {
-      const { escrowManager, bountyRegistry, dataRegistry, depositor, recipient } =
-        await loadFixture(deployFixture);
+      const {
+        escrowManager,
+        bountyRegistry,
+        dataRegistry,
+        depositor,
+        recipient,
+      } = await loadFixture(deployFixture);
       const bountyId = 1;
       const amount = hre.ethers.parseEther("1.0");
 
@@ -183,14 +220,20 @@ describe("EscrowManager", function () {
         .connect(bountyRegistry)
         .deposit(bountyId, depositor.address, { value: amount });
 
-      const recipientBalanceBefore = await hre.ethers.provider.getBalance(recipient.address);
+      const recipientBalanceBefore = await hre.ethers.provider.getBalance(
+        recipient.address
+      );
 
       // Release funds
-      await expect(escrowManager.connect(dataRegistry).release(bountyId, recipient.address))
+      await expect(
+        escrowManager.connect(dataRegistry).release(bountyId, recipient.address)
+      )
         .to.emit(escrowManager, "FundsReleased")
         .withArgs(bountyId, recipient.address, amount);
 
-      const recipientBalanceAfter = await hre.ethers.provider.getBalance(recipient.address);
+      const recipientBalanceAfter = await hre.ethers.provider.getBalance(
+        recipient.address
+      );
       expect(recipientBalanceAfter - recipientBalanceBefore).to.equal(amount);
 
       const escrow = await escrowManager.getEscrow(bountyId);
@@ -198,8 +241,13 @@ describe("EscrowManager", function () {
     });
 
     it("Should update statistics after release", async function () {
-      const { escrowManager, bountyRegistry, dataRegistry, depositor, recipient } =
-        await loadFixture(deployFixture);
+      const {
+        escrowManager,
+        bountyRegistry,
+        dataRegistry,
+        depositor,
+        recipient,
+      } = await loadFixture(deployFixture);
       const amount = hre.ethers.parseEther("1.0");
 
       await escrowManager
@@ -241,7 +289,9 @@ describe("EscrowManager", function () {
     });
 
     it("Should revert release if escrow not funded", async function () {
-      const { escrowManager, dataRegistry, recipient } = await loadFixture(deployFixture);
+      const { escrowManager, dataRegistry, recipient } = await loadFixture(
+        deployFixture
+      );
 
       await expect(
         escrowManager.connect(dataRegistry).release(1, recipient.address)
@@ -249,8 +299,13 @@ describe("EscrowManager", function () {
     });
 
     it("Should revert double release", async function () {
-      const { escrowManager, bountyRegistry, dataRegistry, depositor, recipient } =
-        await loadFixture(deployFixture);
+      const {
+        escrowManager,
+        bountyRegistry,
+        dataRegistry,
+        depositor,
+        recipient,
+      } = await loadFixture(deployFixture);
       const amount = hre.ethers.parseEther("1.0");
 
       await escrowManager
@@ -266,7 +321,9 @@ describe("EscrowManager", function () {
 
   describe("Refund", function () {
     it("Should refund funds to depositor", async function () {
-      const { escrowManager, bountyRegistry, depositor } = await loadFixture(deployFixture);
+      const { escrowManager, bountyRegistry, depositor } = await loadFixture(
+        deployFixture
+      );
       const bountyId = 1;
       const amount = hre.ethers.parseEther("1.0");
 
@@ -274,13 +331,17 @@ describe("EscrowManager", function () {
         .connect(bountyRegistry)
         .deposit(bountyId, depositor.address, { value: amount });
 
-      const depositorBalanceBefore = await hre.ethers.provider.getBalance(depositor.address);
+      const depositorBalanceBefore = await hre.ethers.provider.getBalance(
+        depositor.address
+      );
 
       await expect(escrowManager.connect(bountyRegistry).refund(bountyId))
         .to.emit(escrowManager, "FundsRefunded")
         .withArgs(bountyId, depositor.address, amount);
 
-      const depositorBalanceAfter = await hre.ethers.provider.getBalance(depositor.address);
+      const depositorBalanceAfter = await hre.ethers.provider.getBalance(
+        depositor.address
+      );
       expect(depositorBalanceAfter - depositorBalanceBefore).to.equal(amount);
 
       const escrow = await escrowManager.getEscrow(bountyId);
@@ -288,7 +349,9 @@ describe("EscrowManager", function () {
     });
 
     it("Should update statistics after refund", async function () {
-      const { escrowManager, bountyRegistry, depositor } = await loadFixture(deployFixture);
+      const { escrowManager, bountyRegistry, depositor } = await loadFixture(
+        deployFixture
+      );
       const amount = hre.ethers.parseEther("1.0");
 
       await escrowManager
@@ -316,7 +379,9 @@ describe("EscrowManager", function () {
     });
 
     it("Should revert refund if escrow not funded", async function () {
-      const { escrowManager, bountyRegistry } = await loadFixture(deployFixture);
+      const { escrowManager, bountyRegistry } = await loadFixture(
+        deployFixture
+      );
 
       await expect(
         escrowManager.connect(bountyRegistry).refund(1)
@@ -324,7 +389,9 @@ describe("EscrowManager", function () {
     });
 
     it("Should revert double refund", async function () {
-      const { escrowManager, bountyRegistry, depositor } = await loadFixture(deployFixture);
+      const { escrowManager, bountyRegistry, depositor } = await loadFixture(
+        deployFixture
+      );
       const amount = hre.ethers.parseEther("1.0");
 
       await escrowManager
@@ -349,13 +416,17 @@ describe("EscrowManager", function () {
         .connect(bountyRegistry)
         .deposit(bountyId, depositor.address, { value: amount });
 
-      const recipientBalanceBefore = await hre.ethers.provider.getBalance(recipient.address);
+      const recipientBalanceBefore = await hre.ethers.provider.getBalance(
+        recipient.address
+      );
 
       await expect(escrowManager.emergencyWithdraw(bountyId, recipient.address))
         .to.emit(escrowManager, "FundsRefunded")
         .withArgs(bountyId, recipient.address, amount);
 
-      const recipientBalanceAfter = await hre.ethers.provider.getBalance(recipient.address);
+      const recipientBalanceAfter = await hre.ethers.provider.getBalance(
+        recipient.address
+      );
       expect(recipientBalanceAfter - recipientBalanceBefore).to.equal(amount);
     });
 
@@ -370,11 +441,16 @@ describe("EscrowManager", function () {
 
       await expect(
         escrowManager.connect(user).emergencyWithdraw(1, recipient.address)
-      ).to.be.revertedWithCustomError(escrowManager, "OwnableUnauthorizedAccount");
+      ).to.be.revertedWithCustomError(
+        escrowManager,
+        "OwnableUnauthorizedAccount"
+      );
     });
 
     it("Should revert emergency withdraw with zero recipient", async function () {
-      const { escrowManager, bountyRegistry, depositor } = await loadFixture(deployFixture);
+      const { escrowManager, bountyRegistry, depositor } = await loadFixture(
+        deployFixture
+      );
       const amount = hre.ethers.parseEther("1.0");
 
       await escrowManager
@@ -389,7 +465,9 @@ describe("EscrowManager", function () {
 
   describe("View Functions", function () {
     it("Should return correct escrow status", async function () {
-      const { escrowManager, bountyRegistry, depositor } = await loadFixture(deployFixture);
+      const { escrowManager, bountyRegistry, depositor } = await loadFixture(
+        deployFixture
+      );
       const amount = hre.ethers.parseEther("1.0");
 
       expect(await escrowManager.isEscrowFunded(1)).to.be.false;
@@ -402,7 +480,9 @@ describe("EscrowManager", function () {
     });
 
     it("Should return correct escrow amount", async function () {
-      const { escrowManager, bountyRegistry, depositor } = await loadFixture(deployFixture);
+      const { escrowManager, bountyRegistry, depositor } = await loadFixture(
+        deployFixture
+      );
       const amount = hre.ethers.parseEther("1.0");
 
       expect(await escrowManager.getEscrowAmount(1)).to.equal(0);
@@ -415,7 +495,9 @@ describe("EscrowManager", function () {
     });
 
     it("Should return correct total balance", async function () {
-      const { escrowManager, bountyRegistry, depositor } = await loadFixture(deployFixture);
+      const { escrowManager, bountyRegistry, depositor } = await loadFixture(
+        deployFixture
+      );
       const amount1 = hre.ethers.parseEther("1.0");
       const amount2 = hre.ethers.parseEther("2.0");
 
@@ -445,8 +527,13 @@ describe("EscrowManager", function () {
 
   describe("Multiple Bounties", function () {
     it("Should handle multiple bounties independently", async function () {
-      const { escrowManager, bountyRegistry, dataRegistry, depositor, recipient } =
-        await loadFixture(deployFixture);
+      const {
+        escrowManager,
+        bountyRegistry,
+        dataRegistry,
+        depositor,
+        recipient,
+      } = await loadFixture(deployFixture);
       const amount1 = hre.ethers.parseEther("1.0");
       const amount2 = hre.ethers.parseEther("2.0");
       const amount3 = hre.ethers.parseEther("0.5");

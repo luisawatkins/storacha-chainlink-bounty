@@ -31,6 +31,29 @@ const getSubmissionStatus = (status: number) => {
   return statuses[status] || "UNKNOWN";
 };
 
+type ContractReadResult<T = unknown> = { result?: T };
+
+interface BountyResult {
+  id: bigint;
+  metadataUri: string;
+  schemaUri: string;
+  status: number;
+  reward: bigint;
+  deadline: bigint;
+  maxSubmissions: bigint;
+  submissionCount: bigint;
+}
+
+interface SubmissionResult {
+  id: bigint;
+  bountyId: bigint;
+  contributor: `0x${string}`;
+  cid: string;
+  status: number;
+  submittedAt: bigint;
+  verifiedAt: bigint;
+}
+
 function BountySubmissionsList({
   bountyId,
   onBack,
@@ -82,56 +105,64 @@ function BountySubmissionsList({
         </div>
       ) : (
         <div className={styles.grid}>
-          {submissions?.map((result, index) => {
-            if (!result.result) return null;
-            const submission = result.result;
-            const status = getSubmissionStatus(submission.status);
+          {submissions?.map(
+            (result: ContractReadResult<SubmissionResult>, index) => {
+              if (!result.result) return null;
+              const submission = result.result;
+              const status = getSubmissionStatus(submission.status);
 
-            return (
-              <div key={index} className={styles.card}>
-                <div className={styles.cardHeader}>
-                  <h3 className={styles.bountyTitle}>
-                    Submission #{submission.id.toString()}
-                  </h3>
-                  <span
-                    className={`${styles.statusBadge} ${styles[`status${status.charAt(0) + status.slice(1).toLowerCase()}`]}`}
-                  >
-                    {status}
-                  </span>
-                </div>
-                <div className={styles.cardBody}>
-                  <div
-                    style={{
-                      fontSize: "0.875rem",
-                      color: "var(--foreground-secondary)",
-                    }}
-                  >
-                    <p>
-                      <strong>Contributor:</strong>{" "}
-                      {submission.contributor.substring(0, 6)}...
-                      {submission.contributor.substring(38)}
-                    </p>
-                    <p>
-                      <strong>CID:</strong>{" "}
-                      <span title={submission.cid}>
-                        {submission.cid.substring(0, 10)}...
-                      </span>
-                    </p>
-                    <p>
-                      <strong>Submitted:</strong>{" "}
-                      {formatDate(submission.submittedAt)}
-                    </p>
-                    {submission.verifiedAt > 0n && (
+              return (
+                <div key={index} className={styles.card}>
+                  <div className={styles.cardHeader}>
+                    <h3 className={styles.bountyTitle}>
+                      Submission #{submission.id.toString()}
+                    </h3>
+                    <span
+                      className={`${styles.statusBadge} ${
+                        styles[
+                          `status${
+                            status.charAt(0) + status.slice(1).toLowerCase()
+                          }`
+                        ]
+                      }`}
+                    >
+                      {status}
+                    </span>
+                  </div>
+                  <div className={styles.cardBody}>
+                    <div
+                      style={{
+                        fontSize: "0.875rem",
+                        color: "var(--foreground-secondary)",
+                      }}
+                    >
                       <p>
-                        <strong>Verified:</strong>{" "}
-                        {formatDate(submission.verifiedAt)}
+                        <strong>Contributor:</strong>{" "}
+                        {submission.contributor.substring(0, 6)}...
+                        {submission.contributor.substring(38)}
                       </p>
-                    )}
+                      <p>
+                        <strong>CID:</strong>{" "}
+                        <span title={submission.cid}>
+                          {submission.cid.substring(0, 10)}...
+                        </span>
+                      </p>
+                      <p>
+                        <strong>Submitted:</strong>{" "}
+                        {formatDate(submission.submittedAt)}
+                      </p>
+                      {submission.verifiedAt > 0n && (
+                        <p>
+                          <strong>Verified:</strong>{" "}
+                          {formatDate(submission.verifiedAt)}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            },
+          )}
         </div>
       )}
     </div>
@@ -223,7 +254,7 @@ function MyBountiesList({ address }: { address: `0x${string}` }) {
 
   return (
     <div className={styles.grid}>
-      {bounties?.map((result, index) => {
+      {bounties?.map((result: ContractReadResult<BountyResult>, index) => {
         if (!result.result) return null;
         const bounty = result.result;
         const status = getBountyStatus(bounty.status);
@@ -235,7 +266,11 @@ function MyBountiesList({ address }: { address: `0x${string}` }) {
                 #{bounty.id.toString()} Bounty
               </h3>
               <span
-                className={`${styles.statusBadge} ${styles[`status${status.charAt(0) + status.slice(1).toLowerCase()}`]}`}
+                className={`${styles.statusBadge} ${
+                  styles[
+                    `status${status.charAt(0) + status.slice(1).toLowerCase()}`
+                  ]
+                }`}
               >
                 {status}
               </span>
@@ -326,49 +361,57 @@ function MySubmissionsList({ address }: { address: `0x${string}` }) {
 
   return (
     <div className={styles.grid}>
-      {submissions?.map((result, index) => {
-        if (!result.result) return null;
-        const submission = result.result;
-        const status = getSubmissionStatus(submission.status);
+      {submissions?.map(
+        (result: ContractReadResult<SubmissionResult>, index) => {
+          if (!result.result) return null;
+          const submission = result.result;
+          const status = getSubmissionStatus(submission.status);
 
-        return (
-          <div key={index} className={styles.card}>
-            <div className={styles.cardHeader}>
-              <h3 className={styles.bountyTitle}>
-                Submission #{submission.id.toString()}
-              </h3>
-              <span
-                className={`${styles.statusBadge} ${styles[`status${status.charAt(0) + status.slice(1).toLowerCase()}`]}`}
-              >
-                {status}
-              </span>
-            </div>
-            <div className={styles.cardBody}>
-              <div style={{ fontSize: "0.875rem", color: "#64748b" }}>
-                <p>
-                  <strong>Bounty ID:</strong> {submission.bountyId.toString()}
-                </p>
-                <p>
-                  <strong>CID:</strong>{" "}
-                  <span title={submission.cid}>
-                    {submission.cid.substring(0, 10)}...
-                  </span>
-                </p>
-                <p>
-                  <strong>Submitted:</strong>{" "}
-                  {formatDate(submission.submittedAt)}
-                </p>
-                {submission.verifiedAt > 0n && (
+          return (
+            <div key={index} className={styles.card}>
+              <div className={styles.cardHeader}>
+                <h3 className={styles.bountyTitle}>
+                  Submission #{submission.id.toString()}
+                </h3>
+                <span
+                  className={`${styles.statusBadge} ${
+                    styles[
+                      `status${
+                        status.charAt(0) + status.slice(1).toLowerCase()
+                      }`
+                    ]
+                  }`}
+                >
+                  {status}
+                </span>
+              </div>
+              <div className={styles.cardBody}>
+                <div style={{ fontSize: "0.875rem", color: "#64748b" }}>
                   <p>
-                    <strong>Verified:</strong>{" "}
-                    {formatDate(submission.verifiedAt)}
+                    <strong>Bounty ID:</strong> {submission.bountyId.toString()}
                   </p>
-                )}
+                  <p>
+                    <strong>CID:</strong>{" "}
+                    <span title={submission.cid}>
+                      {submission.cid.substring(0, 10)}...
+                    </span>
+                  </p>
+                  <p>
+                    <strong>Submitted:</strong>{" "}
+                    {formatDate(submission.submittedAt)}
+                  </p>
+                  {submission.verifiedAt > 0n && (
+                    <p>
+                      <strong>Verified:</strong>{" "}
+                      {formatDate(submission.verifiedAt)}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        },
+      )}
     </div>
   );
 }
@@ -406,13 +449,17 @@ export default function Dashboard() {
 
       <div className={styles.tabs}>
         <button
-          className={`${styles.tab} ${activeTab === "bounties" ? styles.activeTab : ""}`}
+          className={`${styles.tab} ${
+            activeTab === "bounties" ? styles.activeTab : ""
+          }`}
           onClick={() => setActiveTab("bounties")}
         >
           My Bounties
         </button>
         <button
-          className={`${styles.tab} ${activeTab === "submissions" ? styles.activeTab : ""}`}
+          className={`${styles.tab} ${
+            activeTab === "submissions" ? styles.activeTab : ""
+          }`}
           onClick={() => setActiveTab("submissions")}
         >
           My Submissions
