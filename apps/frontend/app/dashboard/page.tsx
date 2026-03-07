@@ -35,8 +35,8 @@ type ContractReadResult<T = unknown> = { result?: T };
 
 interface BountyResult {
   id: bigint;
-  title: string;
-  description: string;
+  metadataUri: string;
+  schemaUri: string;
   status: number;
   reward: bigint;
   deadline: bigint;
@@ -161,7 +161,7 @@ function BountySubmissionsList({
                   </div>
                 </div>
               );
-            }
+            },
           )}
         </div>
       )}
@@ -212,7 +212,7 @@ function MyBountiesList({ address }: { address: `0x${string}` }) {
   const handleCancel = (id: bigint) => {
     if (
       !confirm(
-        "Are you sure you want to cancel this bounty? This action is irreversible."
+        "Are you sure you want to cancel this bounty? This action is irreversible.",
       )
     )
       return;
@@ -410,7 +410,7 @@ function MySubmissionsList({ address }: { address: `0x${string}` }) {
               </div>
             </div>
           );
-        }
+        },
       )}
     </div>
   );
@@ -419,7 +419,7 @@ function MySubmissionsList({ address }: { address: `0x${string}` }) {
 export default function Dashboard() {
   const { address, isConnected } = useAccount();
   const [activeTab, setActiveTab] = useState<"bounties" | "submissions">(
-    "bounties"
+    "bounties",
   );
 
   if (!isConnected || !address) {

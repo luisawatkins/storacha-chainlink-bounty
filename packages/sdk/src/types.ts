@@ -2,6 +2,7 @@
  * Types for the Storacha Bounty SDK
  */
 
+/** Options forwarded to @storacha/client create(). Not re-exported by the package, so mirrored here. */
 export type StorachaClientFactoryOptions = Record<string, unknown>;
 
 /**
