@@ -1,7 +1,5 @@
 import Link from "next/link";
 import styles from "./page.module.css";
-import { ThemeToggle } from "./components/ThemeToggle";
-import { ConnectWallet } from "./components/ConnectWallet";
 
 export default function Home() {
   return (

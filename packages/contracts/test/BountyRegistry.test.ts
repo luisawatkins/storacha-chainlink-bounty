@@ -15,8 +15,9 @@ describe("BountyRegistry", function () {
     const escrowManager = await EscrowManager.deploy();
 
     // Deploy BountyRegistry
-    const BountyRegistry =
-      await hre.ethers.getContractFactory("BountyRegistry");
+    const BountyRegistry = await hre.ethers.getContractFactory(
+      "BountyRegistry"
+    );
     const registry = await BountyRegistry.deploy();
 
     // Set up bidirectional references
@@ -39,8 +40,9 @@ describe("BountyRegistry", function () {
   async function deployFixtureWithoutEscrowManager() {
     const [owner, creator, user, dataRegistrySigner] =
       await hre.ethers.getSigners();
-    const BountyRegistry =
-      await hre.ethers.getContractFactory("BountyRegistry");
+    const BountyRegistry = await hre.ethers.getContractFactory(
+      "BountyRegistry"
+    );
     const registry = await BountyRegistry.deploy();
 
     await registry.setDataRegistry(dataRegistrySigner.address);
@@ -59,7 +61,7 @@ describe("BountyRegistry", function () {
   describe("EscrowManager Integration", function () {
     it("Should revert createBounty if EscrowManager not set", async function () {
       const { registry, creator } = await loadFixture(
-        deployFixtureWithoutEscrowManager,
+        deployFixtureWithoutEscrowManager
       );
       const deadline = (await time.latest()) + 86400;
       const reward = hre.ethers.parseEther("0.1");
@@ -67,27 +69,28 @@ describe("BountyRegistry", function () {
       await expect(
         registry
           .connect(creator)
-          .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+          .createBounty("QmMetadata", "QmSchema", deadline, 10, {
             value: reward,
-          }),
+          })
       ).to.be.revertedWithCustomError(registry, "EscrowManagerNotSet");
     });
 
     it("Should allow owner to set EscrowManager", async function () {
       const { registry, escrowManager } = await loadFixture(deployFixture);
       expect(await registry.escrowManager()).to.equal(
-        await escrowManager.getAddress(),
+        await escrowManager.getAddress()
       );
     });
 
     it("Should emit event when EscrowManager is updated", async function () {
       const { registry } = await loadFixture(deployFixtureWithoutEscrowManager);
-      const EscrowManager =
-        await hre.ethers.getContractFactory("EscrowManager");
+      const EscrowManager = await hre.ethers.getContractFactory(
+        "EscrowManager"
+      );
       const newEscrowManager = await EscrowManager.deploy();
 
       await expect(
-        registry.setEscrowManager(await newEscrowManager.getAddress()),
+        registry.setEscrowManager(await newEscrowManager.getAddress())
       )
         .to.emit(registry, "EscrowManagerUpdated")
         .withArgs(hre.ethers.ZeroAddress, await newEscrowManager.getAddress());
@@ -97,50 +100,60 @@ describe("BountyRegistry", function () {
   describe("setDataRegistry", function () {
     it("Should emit DataRegistryUpdated event", async function () {
       const { dataRegistrySigner } = await loadFixture(deployFixture);
-      const BountyRegistry =
-        await hre.ethers.getContractFactory("BountyRegistry");
+      const BountyRegistry = await hre.ethers.getContractFactory(
+        "BountyRegistry"
+      );
       const newRegistry = await BountyRegistry.deploy();
 
       await expect(newRegistry.setDataRegistry(dataRegistrySigner.address))
         .to.emit(newRegistry, "DataRegistryUpdated")
         .withArgs(
           "0x0000000000000000000000000000000000000000",
-          dataRegistrySigner.address,
+          dataRegistrySigner.address
         );
     });
 
     it("Should revert when setting zero address", async function () {
       const { registry } = await loadFixture(deployFixture);
       await expect(
-        registry.setDataRegistry("0x0000000000000000000000000000000000000000"),
+        registry.setDataRegistry("0x0000000000000000000000000000000000000000")
       ).to.be.revertedWithCustomError(registry, "InvalidAddress");
     });
 
     it("Should revert when called by non-owner", async function () {
-      const { registry, user, dataRegistrySigner } =
-        await loadFixture(deployFixture);
+      const { registry, user, dataRegistrySigner } = await loadFixture(
+        deployFixture
+      );
       await expect(
-        registry.connect(user).setDataRegistry(dataRegistrySigner.address),
+        registry.connect(user).setDataRegistry(dataRegistrySigner.address)
       ).to.be.revertedWithCustomError(registry, "OwnableUnauthorizedAccount");
     });
   });
 
   describe("Create Bounty", function () {
     it("Should create bounty and deposit to EscrowManager", async function () {
-      const { registry, escrowManager, creator } =
-        await loadFixture(deployFixture);
+      const { registry, escrowManager, creator } = await loadFixture(
+        deployFixture
+      );
       const deadline = (await time.latest()) + 86400;
       const reward = hre.ethers.parseEther("0.1");
 
       await expect(
         registry
           .connect(creator)
-          .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+          .createBounty("QmMetadata", "QmSchema", deadline, 10, {
             value: reward,
-          }),
+          })
       )
         .to.emit(registry, "BountyCreated")
-        .withArgs(0, creator.address, reward, "QmSchema", deadline)
+        .withArgs(
+          0,
+          creator.address,
+          reward,
+          "QmMetadata",
+          "QmSchema",
+          deadline,
+        )
         .and.to.emit(escrowManager, "FundsDeposited")
         .withArgs(0, creator.address, reward);
 
@@ -160,9 +173,9 @@ describe("BountyRegistry", function () {
       await expect(
         registry
           .connect(creator)
-          .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+          .createBounty("QmMetadata", "QmSchema", deadline, 10, {
             value: hre.ethers.parseEther("0.005"),
-          }),
+          })
       ).to.be.revertedWithCustomError(registry, "InsufficientReward");
     });
 
@@ -173,9 +186,9 @@ describe("BountyRegistry", function () {
       await expect(
         registry
           .connect(creator)
-          .createBounty("Title", "Desc", "QmSchema", pastDeadline, 10, {
+          .createBounty("QmMetadata", "QmSchema", pastDeadline, 10, {
             value: hre.ethers.parseEther("0.1"),
-          }),
+          })
       ).to.be.revertedWithCustomError(registry, "InvalidDeadline");
     });
 
@@ -186,28 +199,29 @@ describe("BountyRegistry", function () {
       await expect(
         registry
           .connect(creator)
-          .createBounty("Title", "Desc", "QmSchema", deadline, 0, {
+          .createBounty("QmMetadata", "QmSchema", deadline, 0, {
             value: hre.ethers.parseEther("0.1"),
-          }),
+          })
       ).to.be.revertedWithCustomError(registry, "InvalidStatus");
     });
   });
 
   describe("Cancel Bounty", function () {
     it("Should cancel and refund creator via EscrowManager", async function () {
-      const { registry, escrowManager, creator } =
-        await loadFixture(deployFixture);
+      const { registry, escrowManager, creator } = await loadFixture(
+        deployFixture
+      );
       const deadline = (await time.latest()) + 86400;
       const reward = hre.ethers.parseEther("0.1");
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: reward,
         });
 
       const creatorBalanceBefore = await hre.ethers.provider.getBalance(
-        creator.address,
+        creator.address
       );
 
       const tx = await registry.connect(creator).cancelBounty(0);
@@ -221,10 +235,10 @@ describe("BountyRegistry", function () {
         .withArgs(0, creator.address, reward);
 
       const creatorBalanceAfter = await hre.ethers.provider.getBalance(
-        creator.address,
+        creator.address
       );
       expect(creatorBalanceAfter + gasUsed - creatorBalanceBefore).to.equal(
-        reward,
+        reward
       );
 
       const bounty = await registry.getBounty(0);
@@ -241,13 +255,13 @@ describe("BountyRegistry", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: reward,
         });
       await registry.connect(creator).cancelBounty(0);
 
       await expect(
-        registry.connect(creator).cancelBounty(0),
+        registry.connect(creator).cancelBounty(0)
       ).to.be.revertedWithCustomError(registry, "InvalidStatus");
     });
 
@@ -257,32 +271,33 @@ describe("BountyRegistry", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
 
       await expect(
-        registry.connect(user).cancelBounty(0),
+        registry.connect(user).cancelBounty(0)
       ).to.be.revertedWithCustomError(registry, "Unauthorized");
     });
   });
 
   describe("Complete Bounty", function () {
     it("Should complete bounty", async function () {
-      const { registry, creator, user, dataRegistrySigner } =
-        await loadFixture(deployFixture);
+      const { registry, creator, user, dataRegistrySigner } = await loadFixture(
+        deployFixture
+      );
       const deadline = (await time.latest()) + 86400;
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
 
       await expect(
         registry
           .connect(dataRegistrySigner)
-          .completeBounty(0, user.address, "QmData"),
+          .completeBounty(0, user.address, "QmData")
       )
         .to.emit(registry, "BountyCompleted")
         .withArgs(0, user.address, "QmData");
@@ -297,22 +312,24 @@ describe("BountyRegistry", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
 
       await expect(
-        registry.connect(user).completeBounty(0, user.address, "QmData"),
+        registry.connect(user).completeBounty(0, user.address, "QmData")
       ).to.be.revertedWithCustomError(registry, "Unauthorized");
     });
 
     it("Should revert if DataRegistry not set", async function () {
-      const [owner, creator, user] = await hre.ethers.getSigners();
-      const EscrowManager =
-        await hre.ethers.getContractFactory("EscrowManager");
+      const [_owner, creator, user] = await hre.ethers.getSigners();
+      const EscrowManager = await hre.ethers.getContractFactory(
+        "EscrowManager"
+      );
       const escrowManager = await EscrowManager.deploy();
-      const BountyRegistry =
-        await hre.ethers.getContractFactory("BountyRegistry");
+      const BountyRegistry = await hre.ethers.getContractFactory(
+        "BountyRegistry"
+      );
       const newRegistry = await BountyRegistry.deploy();
 
       // Set up EscrowManager but NOT DataRegistry
@@ -323,25 +340,26 @@ describe("BountyRegistry", function () {
 
       await newRegistry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
 
       await expect(
-        newRegistry.connect(user).completeBounty(0, user.address, "QmData"),
+        newRegistry.connect(user).completeBounty(0, user.address, "QmData")
       ).to.be.revertedWithCustomError(newRegistry, "DataRegistryNotSet");
     });
   });
 
   describe("Increment Submissions", function () {
     it("Should increment submission count", async function () {
-      const { registry, creator, dataRegistrySigner } =
-        await loadFixture(deployFixture);
+      const { registry, creator, dataRegistrySigner } = await loadFixture(
+        deployFixture
+      );
       const deadline = (await time.latest()) + 86400;
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 3, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 3, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -359,23 +377,24 @@ describe("BountyRegistry", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 3, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 3, {
           value: hre.ethers.parseEther("0.1"),
         });
 
       await expect(
-        registry.connect(user).incrementSubmissions(0),
+        registry.connect(user).incrementSubmissions(0)
       ).to.be.revertedWithCustomError(registry, "Unauthorized");
     });
 
     it("Should revert when max reached", async function () {
-      const { registry, creator, dataRegistrySigner } =
-        await loadFixture(deployFixture);
+      const { registry, creator, dataRegistrySigner } = await loadFixture(
+        deployFixture
+      );
       const deadline = (await time.latest()) + 86400;
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 2, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 2, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -383,7 +402,7 @@ describe("BountyRegistry", function () {
       await registry.connect(dataRegistrySigner).incrementSubmissions(0);
 
       await expect(
-        registry.connect(dataRegistrySigner).incrementSubmissions(0),
+        registry.connect(dataRegistrySigner).incrementSubmissions(0)
       ).to.be.revertedWithCustomError(registry, "MaxSubmissionsReached");
     });
   });
@@ -395,7 +414,7 @@ describe("BountyRegistry", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -411,12 +430,12 @@ describe("BountyRegistry", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title 1", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata1", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
       await registry
         .connect(creator)
-        .createBounty("Title 2", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata2", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
 

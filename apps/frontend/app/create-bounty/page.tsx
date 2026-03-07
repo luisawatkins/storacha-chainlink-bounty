@@ -17,8 +17,7 @@ export default function CreateBounty() {
   const { isConnected } = useAccount();
 
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
+    metadataUri: "",
     schemaUri: "",
     reward: "",
     deadline: "",
@@ -85,8 +84,7 @@ export default function CreateBounty() {
         abi: BOUNTY_REGISTRY_ABI,
         functionName: "createBounty",
         args: [
-          formData.title,
-          formData.description,
+          formData.metadataUri,
           formData.schemaUri,
           BigInt(deadlineTimestamp),
           BigInt(maxSubmissions),
@@ -138,31 +136,16 @@ export default function CreateBounty() {
 
         <form className={styles.formCard} onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
-            <label className={styles.label} htmlFor="title">
-              Bounty Title
+            <label className={styles.label} htmlFor="metadataUri">
+              Metadata URI (IPFS CID)
             </label>
             <input
               type="text"
-              id="title"
-              name="title"
+              id="metadataUri"
+              name="metadataUri"
               className={styles.input}
-              placeholder="e.g. Weather Data Collection"
-              value={formData.title}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label className={styles.label} htmlFor="description">
-              Description
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              className={styles.textarea}
-              placeholder="Describe what data you need..."
-              value={formData.description}
+              placeholder="ipfs://... (CID of JSON with title, description, etc.)"
+              value={formData.metadataUri}
               onChange={handleChange}
               required
             />

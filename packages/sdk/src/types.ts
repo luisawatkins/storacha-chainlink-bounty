@@ -2,6 +2,9 @@
  * Types for the Storacha Bounty SDK
  */
 
+/** Options forwarded to @storacha/client create(). Not re-exported by the package, so mirrored here. */
+export type StorachaClientFactoryOptions = Record<string, unknown>;
+
 /**
  * Content Identifier (CID) - a unique identifier for content on IPFS
  * This is a simplified interface compatible with multiformats CID
@@ -138,6 +141,7 @@ export interface DelegationResult {
 export interface StorachaBountyClientConfig {
   /** Custom service URL (optional, defaults to Storacha) */
   serviceUrl?: string;
+  clientOptions?: StorachaClientFactoryOptions;
 }
 
 /**

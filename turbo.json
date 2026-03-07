@@ -1,6 +1,13 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "ui": "tui",
+  "globalEnv": [
+    "SEPOLIA_RPC_URL",
+    "ARBITRUM_SEPOLIA_RPC_URL",
+    "PRIVATE_KEY",
+    "ETHERSCAN_API_KEY",
+    "ARBISCAN_API_KEY"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -16,6 +23,10 @@
     },
     "check-types": {
       "dependsOn": ["^check-types"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
     },
     "dev": {
       "cache": false,

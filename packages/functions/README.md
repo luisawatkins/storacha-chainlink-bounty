@@ -2,17 +2,19 @@
 
 Chainlink Functions verification source code for the Storacha x Chainlink Data Bounty Marketplace.
 
-This package provides the scaffolding for the JavaScript that runs on the Chainlink Decentralized Oracle Network (DON) to verify submitted data against a JSON Schema stored on IPFS.
-
-> **Note:** `source.js` is currently a stub that always returns `0` (rejected). Full IPFS fetching, gateway fallback, and JSON Schema validation will be implemented in [#43](https://github.com/Patrick-Ehimen/storacha-chainlink-bounty/issues/43).
+This package provides the JavaScript that runs on the Chainlink Decentralized Oracle Network (DON) to verify submitted data against a JSON Schema stored on IPFS.
 
 ## How It Works
 
 1. A contributor submits data to a bounty via `DataRegistry.submitData()`
 2. The contract triggers `FunctionsConsumer.requestVerification(submissionId, cid, schemaUri)`
 3. The DON executes this package's `source.js` with `args[0] = dataCid`, `args[1] = schemaCid`
-4. The source fetches both from IPFS, validates data against the schema _(#43)_
+4. The source fetches both from IPFS (w3s.link primary, ipfs.io fallback) and validates data against the schema
 5. Returns `1` (verified) or `0` (rejected) as a uint256
+
+## Supported JSON Schema Features
+
+The inline validator supports: `type`, `required`, `properties`, `items`, `enum`, `const`, `minimum`, `maximum`, `minLength`, `maxLength`, `minItems`, `maxItems`, `pattern`, `additionalProperties`.
 
 ## DON Constraints
 

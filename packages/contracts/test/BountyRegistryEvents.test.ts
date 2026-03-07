@@ -45,7 +45,7 @@ describe("BountyRegistry Events & New Features", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: initialReward,
         });
 
@@ -68,7 +68,7 @@ describe("BountyRegistry Events & New Features", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: initialReward,
         });
 
@@ -88,7 +88,7 @@ describe("BountyRegistry Events & New Features", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
       await registry.connect(creator).cancelBounty(0);
@@ -106,7 +106,7 @@ describe("BountyRegistry Events & New Features", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -126,7 +126,7 @@ describe("BountyRegistry Events & New Features", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", initialDeadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", initialDeadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -144,7 +144,7 @@ describe("BountyRegistry Events & New Features", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", initialDeadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", initialDeadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -159,7 +159,7 @@ describe("BountyRegistry Events & New Features", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", initialDeadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", initialDeadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -179,7 +179,7 @@ describe("BountyRegistry Events & New Features", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -198,7 +198,7 @@ describe("BountyRegistry Events & New Features", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: reward,
         });
 
@@ -232,7 +232,7 @@ describe("BountyRegistry Events & New Features", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -247,7 +247,7 @@ describe("BountyRegistry Events & New Features", function () {
 
       await registry
         .connect(creator)
-        .createBounty("Title", "Desc", "QmSchema", deadline, 10, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 10, {
           value: hre.ethers.parseEther("0.1"),
         });
       await registry.connect(creator).cancelBounty(0);

@@ -14,8 +14,7 @@ contract BountyRegistry is Ownable, ReentrancyGuard {
     struct Bounty {
         uint256 id;
         address creator;
-        string title;
-        string description;
+        string metadataUri; // IPFS CID of off-chain metadata (title, description, etc.)
         string schemaUri; // IPFS CID of JSON Schema
         uint256 reward;
         uint256 deadline;
@@ -49,6 +48,7 @@ contract BountyRegistry is Ownable, ReentrancyGuard {
         uint256 indexed id,
         address indexed creator,
         uint256 reward,
+        string metadataUri,
         string schemaUri,
         uint256 indexed deadline
     );
@@ -110,16 +110,14 @@ contract BountyRegistry is Ownable, ReentrancyGuard {
 
     /**
      * @notice Create a new bounty
-     * @param title Bounty title
-     * @param description Bounty description
+     * @param metadataUri IPFS CID of off-chain metadata
      * @param schemaUri IPFS CID of the JSON Schema for data validation
      * @param deadline Unix timestamp of bounty deadline
      * @param maxSubmissions Maximum number of submissions allowed
      * @return bountyId The ID of the created bounty
      */
     function createBounty(
-        string calldata title,
-        string calldata description,
+        string calldata metadataUri,
         string calldata schemaUri,
         uint256 deadline,
         uint256 maxSubmissions
@@ -134,8 +132,7 @@ contract BountyRegistry is Ownable, ReentrancyGuard {
         bounties[bountyId] = Bounty({
             id: bountyId,
             creator: msg.sender,
-            title: title,
-            description: description,
+            metadataUri: metadataUri,
             schemaUri: schemaUri,
             reward: msg.value,
             deadline: deadline,
@@ -148,7 +145,7 @@ contract BountyRegistry is Ownable, ReentrancyGuard {
         // Deposit funds into EscrowManager
         escrowManager.deposit{value: msg.value}(bountyId, msg.sender);
 
-        emit BountyCreated(bountyId, msg.sender, msg.value, schemaUri, deadline);
+        emit BountyCreated(bountyId, msg.sender, msg.value, metadataUri, schemaUri, deadline);
 
         return bountyId;
     }

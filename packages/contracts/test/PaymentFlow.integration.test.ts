@@ -77,7 +77,7 @@ describe("Payment Flow Integration", function () {
 
       const createTx = await bountyRegistry
         .connect(bountyCreator)
-        .createBounty("Test Bounty", "Description", "QmSchema", deadline, 5, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 5, {
           value: reward,
         });
       const createReceipt = await createTx.wait();
@@ -140,7 +140,7 @@ describe("Payment Flow Integration", function () {
       // Create bounty
       await bountyRegistry
         .connect(bountyCreator)
-        .createBounty("Cancelled Bounty", "Desc", "QmSchema", deadline, 5, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 5, {
           value: reward,
         });
 
@@ -186,17 +186,17 @@ describe("Payment Flow Integration", function () {
       // Create 3 bounties
       await bountyRegistry
         .connect(bountyCreator)
-        .createBounty("Bounty 1", "Desc", "QmSchema", deadline, 5, {
+        .createBounty("QmMetadata1", "QmSchema", deadline, 5, {
           value: reward1,
         });
       await bountyRegistry
         .connect(bountyCreator)
-        .createBounty("Bounty 2", "Desc", "QmSchema", deadline, 5, {
+        .createBounty("QmMetadata2", "QmSchema", deadline, 5, {
           value: reward2,
         });
       await bountyRegistry
         .connect(bountyCreator)
-        .createBounty("Bounty 3", "Desc", "QmSchema", deadline, 5, {
+        .createBounty("QmMetadata3", "QmSchema", deadline, 5, {
           value: reward3,
         });
 
@@ -251,7 +251,7 @@ describe("Payment Flow Integration", function () {
       // Create bounty
       await bountyRegistry
         .connect(bountyCreator)
-        .createBounty("Test Bounty", "Desc", "QmSchema", deadline, 5, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 5, {
           value: reward,
         });
 
@@ -296,7 +296,7 @@ describe("Payment Flow Integration", function () {
 
       await bountyRegistry
         .connect(bountyCreator)
-        .createBounty("Test", "Desc", "QmSchema", deadline, 5, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 5, {
           value: reward,
         });
 
@@ -322,7 +322,7 @@ describe("Payment Flow Integration", function () {
 
       await bountyRegistry
         .connect(bountyCreator)
-        .createBounty("Test", "Desc", "QmSchema", deadline, 5, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 5, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -363,7 +363,7 @@ describe("Payment Flow Integration", function () {
 
       await bountyRegistry
         .connect(bountyCreator)
-        .createBounty("Test", "Desc", "QmSchema", deadline, 5, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 5, {
           value: hre.ethers.parseEther("0.1"),
         });
 
@@ -380,7 +380,7 @@ describe("Payment Flow Integration", function () {
 
       await bountyRegistry
         .connect(bountyCreator)
-        .createBounty("Test", "Desc", "QmSchema", deadline, 5, {
+        .createBounty("QmMetadata", "QmSchema", deadline, 5, {
           value: hre.ethers.parseEther("0.1"),
         });
 

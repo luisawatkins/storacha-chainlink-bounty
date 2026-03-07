@@ -22,17 +22,24 @@ export interface SimulationResult {
  *
  * @param dataCid - IPFS CID of the data to verify
  * @param schemaCid - IPFS CID of the JSON Schema
+ * @param gatewayOverride - Optional gateway base URL (for testing with local server)
  * @returns Simulation result with verification outcome and logs
  */
 export async function simulateVerification(
   dataCid: string,
   schemaCid: string,
+  gatewayOverride?: string,
 ): Promise<SimulationResult> {
   const source = getVerificationSource();
 
+  const simArgs = [dataCid, schemaCid];
+  if (gatewayOverride) {
+    simArgs.push(gatewayOverride);
+  }
+
   const result = await simulateScript({
     source,
-    args: [dataCid, schemaCid],
+    args: simArgs,
     maxOnChainResponseBytes: 256,
     maxExecutionTimeMs: 10_000,
     maxMemoryUsageMb: 128,

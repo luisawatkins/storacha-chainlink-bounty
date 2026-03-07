@@ -31,21 +31,21 @@ async function main() {
   console.log(
     "Balance:",
     ethers.formatEther(await ethers.provider.getBalance(signer.address)),
-    "ETH",
+    "ETH"
   );
 
   // Get contract instances
   const functionsConsumer = await ethers.getContractAt(
     "FunctionsConsumer",
-    ADDRESSES.functionsConsumer,
+    ADDRESSES.functionsConsumer
   );
   const bountyRegistry = await ethers.getContractAt(
     "BountyRegistry",
-    ADDRESSES.bountyRegistry,
+    ADDRESSES.bountyRegistry
   );
   const dataRegistry = await ethers.getContractAt(
     "DataRegistry",
-    ADDRESSES.dataRegistry,
+    ADDRESSES.dataRegistry
   );
 
   // Step 1: Push verification source on-chain
@@ -56,7 +56,7 @@ async function main() {
     "..",
     "functions",
     "src",
-    "source.js",
+    "source.js"
   );
   const source = fs.readFileSync(sourcePath, "utf-8");
   console.log(`Source length: ${source.length} chars`);
@@ -82,7 +82,7 @@ async function main() {
   console.log("Schema CID:", schemaCid);
   console.log("Data CID:", dataCid);
   console.log(
-    "NOTE: Using placeholder CIDs. For a real test, upload via Storacha SDK.",
+    "NOTE: Using placeholder CIDs. For a real test, upload via Storacha SDK."
   );
 
   // Step 3: Create a bounty
@@ -91,19 +91,19 @@ async function main() {
   const deadline = Math.floor(Date.now() / 1000) + 86400; // 24h from now
   const maxSubmissions = 5;
 
+  const metadataUri = "ipfs://bafkreitest_bounty_metadata_placeholder"; // IPFS CID of off-chain metadata JSON
   const tx2 = await bountyRegistry.createBounty(
-    "Test Bounty",
-    "Testing Chainlink Functions verification",
+    metadataUri,
     schemaCid,
     deadline,
     maxSubmissions,
-    { value: reward },
+    { value: reward }
   );
   console.log("Tx:", tx2.hash);
   const receipt2 = await tx2.wait();
 
   // Find bounty ID from event
-  const bountyCreatedEvent = receipt2?.logs.find((log: any) => {
+  const bountyCreatedEvent = receipt2?.logs.find((log: ethers.Log) => {
     try {
       return bountyRegistry.interface.parseLog(log)?.name === "BountyCreated";
     } catch {
@@ -149,7 +149,7 @@ async function main() {
 
       const events = await functionsConsumer.queryFilter(
         filter,
-        receipt3!.blockNumber,
+        receipt3!.blockNumber
       );
       if (events.length > 0) {
         clearInterval(interval);
@@ -166,7 +166,9 @@ async function main() {
   });
 
   console.log(
-    `\nFinal result: ${result ? "VERIFIED" : "REJECTED (expected with placeholder CIDs)"}`,
+    `\nFinal result: ${
+      result ? "VERIFIED" : "REJECTED (expected with placeholder CIDs)"
+    }`
   );
   console.log("\nDone!");
 }
